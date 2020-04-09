@@ -1,0 +1,2 @@
+rootProject.name='GFM_window_client'
+include ':app'
