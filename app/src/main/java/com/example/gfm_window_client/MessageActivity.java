@@ -62,8 +62,64 @@ public class MessageActivity extends AppCompatActivity {
                 case Constant.SOCKET_RECEIVED_MESSAGE_SUCESS:
                     String data_ascii_str = (String) msg.obj;
                     String data_hex_str = StringConvertUtil.charStr2hexStr(data_ascii_str);
-                    Log.d(TAG, "handleMessage: ascii_data:"+data_ascii_str);
-                    Log.d(TAG, "handleMessage: hex_data:"+data_hex_str);
+                    Log.d(TAG, "handleMessage: ascii_data:" + data_ascii_str);
+                    Log.d(TAG, "handleMessage: hex_data:" + data_hex_str);
+
+                    String temp = data_ascii_str.substring(0, 2);
+                    String humidity = data_ascii_str.substring(2, 4);
+                    char smokelevel = data_ascii_str.charAt(4);
+                    char rainlevel = data_ascii_str.charAt(5);
+                    char windlevel = data_ascii_str.charAt(6);
+                    char window_isOpen = data_ascii_str.charAt(7);
+
+                    tvTemperatureValue.setText(temp);
+                    tvHumidityValue.setText(humidity);
+
+                    switch (smokelevel) {
+                        case '0':
+                            tvAirValue.setText("低");
+                            break;
+                        case '1':
+                            tvAirValue.setText("中");
+                            break;
+                        case '2':
+                            tvAirValue.setText("高");
+                            break;
+                        default:
+                    }
+                    switch (rainlevel) {
+                        case '0':
+                            tvRainValue.setText("晴");
+                            break;
+                        case '1':
+                            tvRainValue.setText("雨");
+                            break;
+                    }
+                    switch (windlevel) {
+                        case '0':
+                            tvWindyValue.setText("晴");
+                            break;
+                        case '1':
+                            tvWindyValue.setText("雨");
+                            break;
+                        case '2':
+                            tvWindyValue.setText("雨");
+                            break;
+                    }
+                    switch(window_isOpen)
+                    {
+                        case '0':
+                            tvWindowValue.setText("关");
+                            sw_window_isOpen = false;
+                            sw_window.setChecked(false);
+                            break;
+                        case '1':
+                            tvWindowValue.setText("开");
+                            sw_window_isOpen = true;
+                            sw_window.setChecked(true);
+                            break;
+                    }
+
                     break;
                 case Constant.SOCKET_RECEIVED_MESSAGE_FAILD:
                     //toast
@@ -71,8 +127,8 @@ public class MessageActivity extends AppCompatActivity {
                     break;
             }
         }
-    };;
-
+    };
+    ;
 
 
     @Override
@@ -85,17 +141,17 @@ public class MessageActivity extends AppCompatActivity {
         mThreadPool = Executors.newCachedThreadPool();
 
         sw_window.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (!sw_window_isOpen){
-                    sw_window_isOpen =true;
-                    //打开窗户
-                    client.sendMessage("open");
-                    Toast.makeText(MessageActivity.this,"打开窗户",Toast.LENGTH_SHORT).show();
-                }else {
-                    sw_window_isOpen = false;
-                    //关闭窗户
-                    client.sendMessage("close");
-                    Toast.makeText(MessageActivity.this,"关闭窗户",Toast.LENGTH_SHORT).show();
-                }
+            if (!sw_window_isOpen) {
+                sw_window_isOpen = true;
+                //打开窗户
+                client.sendMessage("open");
+                Toast.makeText(MessageActivity.this, "打开窗户", Toast.LENGTH_SHORT).show();
+            } else {
+                sw_window_isOpen = false;
+                //关闭窗户
+                client.sendMessage("close");
+                Toast.makeText(MessageActivity.this, "关闭窗户", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
