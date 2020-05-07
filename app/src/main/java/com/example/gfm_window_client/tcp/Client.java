@@ -22,7 +22,7 @@ public class Client {
 
     private Socket client;
 
-    private OutputStream os = null;
+    private OutputStream os = null; //输入输出流
     private InputStream is = null;
 
     // 线程池，此处直接采用线程池进行线程管理,而没有一个个开线程
@@ -53,11 +53,11 @@ public class Client {
                 Log.d(TAG, "connect: -----");
                 os = client.getOutputStream();
                 is = client.getInputStream();
-                Message msg = Message.obtain();
+                Message msg = Message.obtain();//建一个信息，通过handle，发出去通知是否连接成功
                 if (client.isConnected()) {
                     msg.what = Constant.SOCKET_CONN_SUCESS;
                     mLoginHandler.sendMessage(msg);
-                    mThreadPool.execute(new KeepAliveThread(client));
+                    mThreadPool.execute(new KeepAliveThread(client)); //app:hbp
                     //mThreadPool.execute(new RecevThread(client));
                 } else {
                     msg.what = Constant.SOCKET_CONN_FAILD;
@@ -98,7 +98,7 @@ public class Client {
         mThreadPool.execute(() -> {
             try {
                 while (true) {
-                    byte[] b = new byte[4];
+                    byte[] b = new byte[8];
                     int r = 0;
                     r = is.read(b);
                     if (r > -1) {

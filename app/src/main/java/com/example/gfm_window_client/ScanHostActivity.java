@@ -36,7 +36,7 @@ public class ScanHostActivity extends AppCompatActivity {
 
     private static final String TAG = "ScanHostActivity";
 
-    @BindView(R.id.btn_start)
+    @BindView(R.id.btn_start) //butterKnife注解方式。注册控件
     Button btnStart;
     @BindView(R.id.tv_host_value)
     TextView tvHostValue;
@@ -61,11 +61,13 @@ public class ScanHostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_host);
-        ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
-        mhandler = new CustomHandler(this);
+        ButterKnife.bind(this);//这里绑定context,将视图文件和java文件绑定
 
-        loadingDialog = new LoadingDialog.Builder(ScanHostActivity.this).create();
+        EventBus.getDefault().register(this); //注册evenbus，在这里是为了传递tcp client 对象
+
+        mhandler = new CustomHandler(this); //handle 在这里是为了通知这个activity,tcp连接的结果
+
+        loadingDialog = new LoadingDialog.Builder(ScanHostActivity.this).create(); //显示加载弹出对话框
 
         String host_ip = TcpUtils.getIP();
         tvHostValue.setText(host_ip);
